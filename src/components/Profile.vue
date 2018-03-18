@@ -76,6 +76,7 @@
 </template>
 
 <script>
+var server = "http://104.236.176.134";
     import axios from 'axios';
   export default {
     name: 'Profile',
@@ -95,7 +96,7 @@
     },
     methods: {
       getPlayers: function() {
-        axios.get("/api/players").then(response => {
+        axios.get(server + "/api/players").then(response => {
           this.players = response.data;
           return true;
         }).catch(err => {
@@ -103,7 +104,7 @@
         });
       },
       addPlayer: function() {
-        axios.post("/api/players", {
+        axios.post(server + "/api/players", {
           username: this.username,
           wins: this.wins
         }).then(response => {
@@ -115,7 +116,7 @@
         });
       },
       deletePlayer: function() {
-        axios.delete("/api/players/" + this.inputDel).then(response => {
+        axios.delete(server + "/api/players/" + this.inputDel).then(response => {
           this.inputDel = "";
           this.username = "";
           this.lastname = "";
@@ -126,7 +127,7 @@
         });
       },
       getPlayer: function() {
-        axios.get("/api/player/" + this.input).then(response => {
+        axios.get(server + "/api/player/" + this.input).then(response => {
           this.username = response.data.username;
           this.firstname = response.data.firstname;
           this.lastname = response.data.lastname;
