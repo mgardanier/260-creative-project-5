@@ -54,9 +54,6 @@
           </ol>
 
         </div>
-        <div class="footer">
-          <a href="https://github.com/mgardanier/260-creative-project-1"> <i class="fa fa-github-square fa-3x" aria-hidden="true"></i></a>
-        </div>
 
       </div>
     </div>
