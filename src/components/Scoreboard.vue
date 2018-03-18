@@ -95,7 +95,7 @@
 </template>
 
 <script>
-var server = "http://104.236.176.134";
+var server = "http://104.236.176.134:3001";
     import axios from 'axios';
   export default {
     name: 'Scoreboard'
