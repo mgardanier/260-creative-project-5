@@ -98,7 +98,7 @@
 var server = "http://104.236.176.134:3001";
     import axios from 'axios';
   export default {
-    name: 'Scoreboard'
+    name: 'Scoreboard',
     data() {
       return {
         players: []
