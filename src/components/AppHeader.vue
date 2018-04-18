@@ -68,8 +68,9 @@
         axios.post("/api/users", {
           username: self.username,
           password: self.password
-        }).then(user => {
+        }).then(response => {
           self.loggedInUser = self.username;
+          self.token = response.data.token;
           self.username = '';
           self.password = '';
           self.loggedIn = true;
