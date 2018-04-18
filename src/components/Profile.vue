@@ -11,8 +11,17 @@
           <li><a v-on:click="switchToRegister">Register</a></li>
         </ul>
 
+        <form id="loginForm" v-if="!loggedIn">
+          <input type="text" v-model="username" id="username" placeholder="Username">
+          <input type="password" v-model="password" id="password" placeholder="Password">
+          <input type="submit" v-on:click.prevent="login" id="loginButton" value="Login">
+          <button v-on:click.prevent="register" id="registerButton">Register</button>
+        </form>
+        <div id="userInfo" v-else>
+          <p>{{loggedInUser}}</p>
+          <button id="logoutButton" v-on:click="logout">Logout</button>
+        </div>
       </div>
-
 
       <div class="main">
           <h2>{{username}}</h2>
@@ -44,29 +53,8 @@
         </section>
 
       </div>
+      <leaderboard/>
 
-      <div class="leaderboard">
-        <div class="leaderTitle">
-          <h1>Leaderboard</h1>
-          <i class="fa fa-trophy fa-5x" aria-hidden="true"></i>
-        </div>
-        <br>
-        <h2>Top 10</h2>
-        <hr>
-        <ol>
-          <li>Jimmy</li>
-          <li>Jane</li>
-          <li>Phill</li>
-          <li>Rick</li>
-          <li>Larry</li>
-          <li>Fred</li>
-          <li>Lindsay</li>
-          <li>Ryan</li>
-          <li>Joe</li>
-          <li>Wendy</li>
-        </ol>
-
-      </div>
     </div>
 
   </div>
@@ -75,8 +63,10 @@
 <script>
 var server = "http://104.236.176.134:3001";
     import axios from 'axios';
+    import Leaderboard from './Leaderboard';
   export default {
     name: 'Profile',
+    components: { Leaderboard },
     data() {
       return {
         players: [],

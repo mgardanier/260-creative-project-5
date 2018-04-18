@@ -36,10 +36,6 @@ a {
   cursor: pointer;
 }
 
-.leaderboard {
-    grid-area: leaderboard;
-    margin-right: 50px;
-}
 
 .main {
   grid-area: main;

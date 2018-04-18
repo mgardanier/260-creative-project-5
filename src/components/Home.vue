@@ -55,29 +55,7 @@ cd   <template>
 
 </div>
 
-<div class="leaderboard">
-
-  <div class="leaderTitle">
-    <h1>Leaderboard</h1>
-    <i class="fa fa-trophy fa-5x" aria-hidden="true"></i>
-  </div>
-  <br>
-  <h2>Top 10</h2>
-  <hr>
-  <ol>
-    <li>Jimmy</li>
-    <li>Jane</li>
-    <li>Phill</li>
-    <li>Rick</li>
-    <li>Larry</li>
-    <li>Fred</li>
-    <li>Lindsay</li>
-    <li>Ryan</li>
-    <li>Joe</li>
-    <li>Wendy</li>
-  </ol>
-
-</div>
+<leaderboard/>
 
 
 </div>
@@ -89,8 +67,10 @@ cd   <template>
 var server = "http://104.236.176.134:3001";
 
   import axios from 'axios';
+  import Leaderboard from './Leaderboard';
   export default {
     name: 'Home',
+    components: { Leaderboard },
     data() {
       return {
         players: [],
