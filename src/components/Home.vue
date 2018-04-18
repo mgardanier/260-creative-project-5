@@ -1,17 +1,27 @@
-<template>
+cd   <template>
   <div class="home">
   <div class="container">
 
-<div class="navBar">
+  <div class="navBar">
 
-  <ul>
-    <li><a v-on:click="switchToHome">Home</a></li>
-    <li><a v-on:click="switchToProfile">View Profile</a></li>
-    <li><a v-on:click="switchToScore">Socreboard</a></li>
-    <li><a v-on:click="switchToRegister">Register</a></li>
-  </ul>
+    <ul>
+      <li><a v-on:click="switchToHome">Home</a></li>
+      <li><a v-on:click="switchToProfile">View Profile</a></li>
+      <li><a v-on:click="switchToScore">Socreboard</a></li>
+      <li><a v-on:click="switchToRegister">Register</a></li>
+    </ul>
 
-</div>
+    <form id="loginForm" v-if="!loggedIn">
+      <input type="text" v-model="username" id="username" placeholder="Username">
+      <input type="password" v-model="password" id="password" placeholder="Password">
+      <input type="submit" v-on:click.prevent="login" id="loginButton" value="Login">
+      <button v-on:click.prevent="register" id="registerButton">Register</button>
+    </form>
+    <div id="userInfo" v-else>
+      <p>{{loggedInUser}}</p>
+      <button id="logoutButton" v-on:click="logout">Logout</button>
+    </div>
+  </div>
 
 <div class="main">
 
@@ -83,7 +93,11 @@ var server = "http://104.236.176.134:3001";
     name: 'Home',
     data() {
       return {
-        players: []
+        players: [],
+        username: '',
+        password: '',
+        loggedIn: false,
+        loggedInUser: ''
       }
     },
     created: function() {
@@ -98,6 +112,40 @@ var server = "http://104.236.176.134:3001";
 
         });
       },
+      login: function(user) {
+        axios.post("/api/login", {
+          username: this.username,
+          password: this.password,
+        }).then(user => {
+          this.loggedInUser = this.username;
+          this.username = '';
+          this.password = '';
+          this.loggedIn = true;
+        }).catch(err => {
+          this.loggedIn = false;
+          this.loggedInUser = '';
+          alert("Invalid username/password");
+        });
+      },
+      register: function() {
+        axios.post("/api/users", {
+          username: this.username,
+          password: this.password
+        }).then(user => {
+          this.loggedInUser = this.username;
+          this.username = '';
+          this.password = '';
+          this.loggedIn = true;
+        }).catch(err => {
+          this.loggedIn = false;
+          this.loggedInUser = '';
+          alert("Username already exists!");
+        });
+      },
+      logout: function() {
+        this.loggedIn = false;
+        this.loggedInUser = '';
+      },
       addPlayer: function() {
         axios.post(server + "/api/players", {
           username: this.username,
@@ -109,17 +157,6 @@ var server = "http://104.236.176.134:3001";
         }).catch(err => {
 
         });
-      },
-      deletePlayer: function(player) {
-        axios.delete("server + /api/items/" + player.id).then(response => {
-          this.getPlayers();
-          return true;
-        }).catch(err => {
-
-        });
-      },
-      searchForPlayer: function(playerName) {
-
       },
       switchToHome: function () {
         this.$router.push('/');

@@ -19,6 +19,11 @@
             <h1>Scoreboards</h1>
           </div>
 
+          <form id="createGameForm">
+            <input type="text" id="gameName" placeholder="Name of game...">
+            <input type="submit" id="createGameButton" value="Create">
+          </form>
+          
         <div class="gameParent">
           <div class="gameChild">
             <h2>Results for Game 1</h2>
