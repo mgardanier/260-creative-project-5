@@ -5,7 +5,6 @@
       <li><a v-on:click="switchToHome">Home</a></li>
       <li><a v-on:click="switchToProfile">View Profile</a></li>
       <li><a v-on:click="switchToScore">Socreboard</a></li>
-      <li><a v-on:click="switchToRegister">Register</a></li>
     </ul>
 
     <form id="loginForm" v-if="!loggedIn">
@@ -32,23 +31,9 @@
         password: '',
         loggedInUser: '',
         loggedIn: false,
+        token: ''
       }
     },
-    /*
-    computed: {
-      loggedIn: function() {
-        debugger;
-        var self = this;
-        axios.get("/api/user/current").then(response => {
-          self.loggedInUser = response.data.username;
-          return true;
-        }).catch(err => {
-          this.loggedInUser = '';
-          return false;
-        });
-      }
-    },
-    */
     created: function() {
         var self = this;
         axios.get("/api/user/current").then(response => {
@@ -68,6 +53,7 @@
           password: self.password,
         }).then(response => {
           self.loggedInUser = response.data.user.username;
+          self.token = response.data.token;
           self.username = '';
           self.password = '';
           self.loggedIn = true;
@@ -94,21 +80,17 @@
         });
       },
       logout: function() {
-        this.loggedIn = false;
-        this.loggedInUser = '';
-        axios.get("/api/logout");
-      },
-      addPlayer: function() {
-        axios.post(server + "/api/players", {
-          username: this.username,
-          wins: this.wins
-        }).then(response => {
-          this.username = "";
-          this.getPlayers();
-          return true;
-        }).catch(err => {
-
+        var self = this;
+        axios.get("/api/logout", self.getAuthHeaders()).then(response => {
+          self.loggedIn = false;
+          self.loggedInUser = '';
+          self.token = '';
+        }).catch(error => {
+          alert("invalid user token");
         });
+      },
+      getAuthHeaders: function () {
+        return { headers: {'Authorization': this.token }};
       },
       switchToHome: function () {
         this.$router.push('/');
@@ -119,9 +101,11 @@
       switchToProfile: function() {
         this.$router.push('/profile');
       },
+      /*
       switchToRegister: function() {
         this.$router.push('/register');
       }
+      */
     }
   }
 

@@ -10,6 +10,27 @@ var cors = require('cors');
 let bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const jwt = require('jsonwebtoken');
+let jwtSecret = process.env.jwtSecret;
+if (jwtSecret === undefined) {
+  console.log("You need to define a jwtSecret environment variable to continue.");
+  knex.destroy();
+  process.exit();
+}
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token)
+    return res.status(403).send({ error: 'No token provided.' });
+  jwt.verify(token, jwtSecret, function(err, decoded) {
+    if (err)
+      return res.status(500).send({ error: 'Failed to authenticate token.' });
+    // if everything good, save to request for use in other routes
+    req.userID = decoded.id;
+    next();
+  });
+}
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -53,14 +74,7 @@ app.put('/api/players/:id', (req, res) => {
   res.send(player);
 });
 
-app.post('/api/players', (req, res) => {
-  id = id + 1;
-  let player = {id:id, firstname:req.body.firstname, lastname:req.body.lastname, username:req.body.username, wins:0};
-  players.push(player);
-  res.send(player);
-});
-
-app.get('/api/logout', (req, res) => {
+app.get('/api/logout', verifyToken, (req, res) => {
   this.currentUser = undefined;
   res.status(200).send();
 });
@@ -78,7 +92,10 @@ app.post('/api/login', (req, res) => {
     return [bcrypt.compare(req.body.password, user.hash), user];
   }).spread((result,user) => {
     if (result) {
-      res.status(200).json({user:user});
+      let token = jwt.sign({ id: user.id }, jwtSecret, {
+        expiresIn: 86400 // expires in 24 hours
+       });
+      res.status(200).json({user:user, token: token});
       this.currentUser = user.username;
     } else
       res.status(403).send("Invalid login credentials 2");
@@ -107,7 +124,10 @@ app.post('/api/users', (req, res) => {
   }).then(ids => {
     return knex('users').where('id',ids[0]).first();
   }).then(user => {
-    res.status(200).json({user:user});
+    let token = jwt.sign({ id: user.id }, jwtSecret, {
+      expiresIn: 86400 // expires in 24 hours
+    });
+    res.status(200).json({user:user, token:token});
     return;
   }).catch(error => {
     if (error.message !== 'abort') {
