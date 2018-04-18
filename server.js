@@ -47,9 +47,9 @@ app.get('/api/players', (req, res) => {
 
 app.get('/api/player/:username', (req, res) => {
   let username = req.params.username;
-  kne('users').where('username', username).first().then(user => {
+  knex('users').where('username', username).first().then(user => {
     if(user === undefined) {
-      res.status(404).send("Sorry, player not found");
+      res.status(404).send("Player does not exist.");
     }
     res.send(user);
   })
@@ -120,7 +120,7 @@ app.post('/api/users', (req, res) => {
     }
     return bcrypt.hash(req.body.password, saltRounds);
   }).then(hash => {
-    return knex('users').insert({username: req.body.username, hash: hash});
+    return knex('users').insert({username: req.body.username, hash: hash, wins:0});
   }).then(ids => {
     return knex('users').where('id',ids[0]).first();
   }).then(user => {
@@ -136,18 +136,5 @@ app.post('/api/users', (req, res) => {
     }
   });
 });
-
-app.delete('/api/players/:username', (req, res) => {
-  let username = req.params.username;
-  for (var i = 0; i < players.length; i++){
-    if(players[i].username === username){
-      players.splice(i, 1);
-      res.sendStatus(200);
-      return;
-    }
-  }
-  res.status(404).send("Sorry, player not found");
-});
-
 
 app.listen(3000, () => console.log('Server listening on port 3000'));

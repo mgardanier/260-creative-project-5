@@ -36,7 +36,7 @@
 </template>
 
 <script>
-var server = "http://104.236.176.134:3001";
+//var server = "http://104.236.176.134:3001";
     import axios from 'axios';
     import Leaderboard from './Leaderboard';
     import AppHeader from './AppHeader';
@@ -56,7 +56,7 @@ var server = "http://104.236.176.134:3001";
     },
     methods: {
       getPlayers: function() {
-        axios.get(server + "/api/players").then(response => {
+        axios.get("/api/players").then(response => {
           this.players = response.data;
           return true;
         }).catch(err => {
@@ -64,7 +64,7 @@ var server = "http://104.236.176.134:3001";
         });
       },
       addPlayer: function() {
-        axios.post(server + "/api/players", {
+        axios.post("/api/players", {
           username: this.username,
           wins: this.wins
         }).then(response => {
@@ -76,7 +76,7 @@ var server = "http://104.236.176.134:3001";
         });
       },
       getPlayer: function() {
-        axios.get(server + "/api/player/" + this.input).then(response => {
+        axios.get("/api/player/" + this.input).then(response => {
           this.username = response.data.username;
           this.wins = response.data.wins;
 
