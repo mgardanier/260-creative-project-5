@@ -15,6 +15,7 @@ html {
   background-color: #50647F;
   font-family: "Sans-serif", "Arial";
 }
+
 .container {
   display: grid;
 
@@ -27,43 +28,11 @@ html {
   grid-gap: 50px;
 }
 
-.navBar {
-  grid-area: navBar;
-  padding-left: 55px;
-  font-size: 20px;
-}
-a {
-  cursor: pointer;
-}
-
-
 .main {
   grid-area: main;
   margin-left: 50px;
 }
 
-.navBar ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0px 0px 50px 0px;
-}
-
-.navBar li {
-  padding-right: 20px;
-  display: inline;
-  float: left;
-}
-
-.navBar a {
-  display: block;
-  padding: 10px;
-  text-decoration: none;
-  color: black;
-}
-
-.navBar a:hover {
-  color: #767A7F;
-}
 
 .footer {
   padding: 50px;

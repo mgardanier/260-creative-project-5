@@ -7,7 +7,7 @@ exports.up = function(knex, Promise) {
       table.string('username');
       table.string('name');
       table.string('role');
-      table.integer('wiins');
+      table.integer('wins');
     }),
   ]);
 };

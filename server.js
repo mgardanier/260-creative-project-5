@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('dist'))
 app.use(cors());
 
-let players = [];
+let currentUser = undefined;
 let id = 0;
 
 app.get('/api/players', (req, res) => {
@@ -26,13 +26,20 @@ app.get('/api/players', (req, res) => {
 
 app.get('/api/player/:username', (req, res) => {
   let username = req.params.username;
-  for (var i = 0; i < players.length; i++){
-    if(players[i].username === username){
-      res.send(players[i]);
-      return;
+  kne('users').where('username', username).first().then(user => {
+    if(user === undefined) {
+      res.status(404).send("Sorry, player not found");
     }
+    res.send(user);
+  })
+});
+
+app.get('/api/user/current', (req, res) => {
+  if(this.currentUser === undefined){
+    res.status(404).send("no current user");
+  } else {
+    res.status (200).json({username: this.currentUser});
   }
-  res.status(404).send("Sorry, player not found");
 });
 
 app.put('/api/players/:id', (req, res) => {
@@ -53,6 +60,11 @@ app.post('/api/players', (req, res) => {
   res.send(player);
 });
 
+app.get('/api/logout', (req, res) => {
+  this.currentUser = undefined;
+  res.status(200).send();
+});
+
 // Login
 app.post('/api/login', (req, res) => {
   if(!req.body.username || !req.body.password){
@@ -65,9 +77,10 @@ app.post('/api/login', (req, res) => {
     }
     return [bcrypt.compare(req.body.password, user.hash), user];
   }).spread((result,user) => {
-    if (result)
+    if (result) {
       res.status(200).json({user:user});
-    else
+      this.currentUser = user.username;
+    } else
       res.status(403).send("Invalid login credentials 2");
     return;
   }).catch(error => {

@@ -2,28 +2,7 @@
 <template>
   <div class="register">
     <div class="container">
-
-      <div class="navBar">
-
-        <ul>
-          <li><a v-on:click="switchToHome">Home</a></li>
-          <li><a v-on:click="switchToProfile">View Profile</a></li>
-          <li><a v-on:click="switchToScore">Socreboard</a></li>
-          <li><a v-on:click="switchToRegister">Register</a></li>
-        </ul>
-
-        <form id="loginForm" v-if="!loggedIn">
-          <input type="text" v-model="username" id="username" placeholder="Username">
-          <input type="password" v-model="password" id="password" placeholder="Password">
-          <input type="submit" v-on:click.prevent="login" id="loginButton" value="Login">
-          <button v-on:click.prevent="register" id="registerButton">Register</button>
-        </form>
-        <div id="userInfo" v-else>
-          <p>{{loggedInUser}}</p>
-          <button id="logoutButton" v-on:click="logout">Logout</button>
-        </div>
-      </div>
-
+      <app-header/>
         <div class="main">
 
           <h2>Register New Player</h2>
@@ -53,9 +32,10 @@
 var server = "http://104.236.176.134:3001";
   import axios from 'axios';
   import Leaderboard from './Leaderboard';
+  import AppHeader from './AppHeader';
   export default {
     name: 'Register',
-    components: { Leaderboard },
+    components: { Leaderboard, AppHeader },
     data() {
       return {
         firstname: '',
@@ -70,29 +50,6 @@ var server = "http://104.236.176.134:3001";
       getPlayers: function() {
         axios.get(server + "/api/players").then(response => {
           this.players = response.data;
-          return true;
-        }).catch(err => {
-
-        });
-      },
-      addPlayer: function() {
-        axios.post(server + "/api/players", {
-          firstname: this.firstname,
-          lastname: this.lastname,
-          username: this.username,
-        }).then(response => {
-          this.username = "";
-          this.firstname = "";
-          this.lastname = "";
-          this.getPlayers();
-          return true;
-        }).catch(err => {
-
-        });
-      },
-      deletePlayer: function(player) {
-        axios.delete(server + "/api/items/" + player.id).then(response => {
-          this.getPlayers();
           return true;
         }).catch(err => {
 

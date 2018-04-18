@@ -2,27 +2,7 @@
   <div class="proflie">
     <div class="container">
 
-      <div class="navBar">
-
-        <ul>
-          <li><a v-on:click="switchToHome">Home</a></li>
-          <li><a v-on:click="switchToProfile">View Profile</a></li>
-          <li><a v-on:click="switchToScore">Socreboard</a></li>
-          <li><a v-on:click="switchToRegister">Register</a></li>
-        </ul>
-
-        <form id="loginForm" v-if="!loggedIn">
-          <input type="text" v-model="username" id="username" placeholder="Username">
-          <input type="password" v-model="password" id="password" placeholder="Password">
-          <input type="submit" v-on:click.prevent="login" id="loginButton" value="Login">
-          <button v-on:click.prevent="register" id="registerButton">Register</button>
-        </form>
-        <div id="userInfo" v-else>
-          <p>{{loggedInUser}}</p>
-          <button id="logoutButton" v-on:click="logout">Logout</button>
-        </div>
-      </div>
-
+      <app-header/>
       <div class="main">
           <h2>{{username}}</h2>
           <div id="forms">
@@ -32,10 +12,6 @@
               <input type="submit" value="Go">
             </form>
             <br>
-            <form v-on:submit.prevent="deletePlayer" class="lookup">
-              <input type="text" v-model="inputDel" placeholder="ERASE player...">
-              <input type="submit" value="Delete">
-            </form>
           </div>
 
         <section class="profileSec">
@@ -45,8 +21,7 @@
             </div>
           </aside>
           <article>
-            <p>First Name: {{firstname}}</p>
-            <p>Last Name: {{lastname}}</p>
+            <p>Username: {{username}}</p>
             <p>Wins: {{wins}}</p>
           </article>
 
@@ -64,14 +39,12 @@
 var server = "http://104.236.176.134:3001";
     import axios from 'axios';
     import Leaderboard from './Leaderboard';
+    import AppHeader from './AppHeader';
   export default {
     name: 'Profile',
-    components: { Leaderboard },
+    components: { Leaderboard, AppHeader },
     data() {
       return {
-        players: [],
-        firstname : '',
-        lastname : '',
         username : '',
         wins : 0,
         input: '',
@@ -79,7 +52,7 @@ var server = "http://104.236.176.134:3001";
       }
     },
     created: function() {
-      this.getPlayers();
+      //this.getPlayers();
     },
     methods: {
       getPlayers: function() {
@@ -102,22 +75,9 @@ var server = "http://104.236.176.134:3001";
 
         });
       },
-      deletePlayer: function() {
-        axios.delete(server + "/api/players/" + this.inputDel).then(response => {
-          this.inputDel = "";
-          this.username = "";
-          this.lastname = "";
-          this.firstname = "";
-          return true;
-        }).catch(err => {
-
-        });
-      },
       getPlayer: function() {
         axios.get(server + "/api/player/" + this.input).then(response => {
           this.username = response.data.username;
-          this.firstname = response.data.firstname;
-          this.lastname = response.data.lastname;
           this.wins = response.data.wins;
 
           this.input = "";
@@ -127,18 +87,6 @@ var server = "http://104.236.176.134:3001";
           this.username = 'No results found'
         });
       },
-      switchToHome: function () {
-        this.$router.push('/');
-      },
-      switchToScore: function() {
-        this.$router.push('/scoreboard');
-      },
-      switchToProfile: function() {
-        this.$router.push('/profile');
-      },
-      switchToRegister: function() {
-        this.$router.push('/register');
-      }
     },
   }
 
